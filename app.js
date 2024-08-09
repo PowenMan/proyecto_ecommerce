@@ -36,4 +36,28 @@ app.post('/registro', async (req, res) => {
     });
 });
 
+// Ruta inicio de sesion
+app.post('login', (req, res) => {
+    const { email, password } = req.body;
+
+    db.query('SELECT * FROM usuarios WHERE email = ?', [email], async (err, result) => {
+        if(err){
+            console.log(err);
+            res.send('Error al iniciar sesion');
+        }else {
+            if(result.length > 0){
+                const usuario = result[0];
+                if(await bcrypt.compare(password, usuario.password)){
+                    req.session.usuario = usuario;
+                    res.redirect('admin');
+                }else {
+                    res.send('Credenciales incorrectas');
+                }
+            }else {
+                res.send('Usuario no encontrado o no esta activo');
+            }
+        }
+    });
+});
+
 module.exports = app;
