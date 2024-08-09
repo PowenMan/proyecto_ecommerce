@@ -5,6 +5,26 @@ const bcrypt = require('bcrypt');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Milddleware para proteger rutas
+function isAthenticated(req, res, next){
+    if(req.session.usuario){
+        return next();
+    }else{
+        res.redirect('/login');
+    }
+}
+
+// Ruta para destruir sesion
+app.get('/logout', (req, res) => {
+    req.session.destroy((e) => {
+        if(e){
+            console.log(e);
+            return res.status(500).send('Error al cerrar sesion');
+        }
+        res.redirect('/login');
+    });
+});
+
 // Rutas de las url
 app.get('/', (req, res) =>{
     res.render('index');
@@ -37,7 +57,7 @@ app.post('/registro', async (req, res) => {
 });
 
 // Ruta inicio de sesion
-app.post('login', (req, res) => {
+app.post('/login', (req, res) => {
     const { email, password } = req.body;
 
     db.query('SELECT * FROM usuarios WHERE email = ?', [email], async (err, result) => {
@@ -49,7 +69,7 @@ app.post('login', (req, res) => {
                 const usuario = result[0];
                 if(await bcrypt.compare(password, usuario.password)){
                     req.session.usuario = usuario;
-                    res.redirect('admin');
+                    res.redirect('/admin');
                 }else {
                     res.send('Credenciales incorrectas');
                 }
@@ -58,6 +78,11 @@ app.post('login', (req, res) => {
             }
         }
     });
+});
+
+// Ruta de logueo
+app.get('/admin', isAthenticated, (req, res) => {
+    res.render('admin');
 });
 
 module.exports = app;
