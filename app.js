@@ -3,6 +3,7 @@ const db = require('./db');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Milddleware para proteger rutas
@@ -84,5 +85,40 @@ app.post('/login', (req, res) => {
 app.get('/admin', isAthenticated, (req, res) => {
     res.render('admin');
 });
+
+// Ruta de categorias
+app.get('/categorias', isAthenticated, (req, res) => {
+    res.render('categorias');
+});
+
+// Ruta de categorias
+app.post('/categorias', (req, res) => {
+    console.log('Solicitud: ', req.body);
+    const  { nombre, descripcion } = req.body;
+
+    db.query('INSERT INTO categorias (nombre, descripcion) VALUES (?, ?)', [nombre, descripcion], (err, result) => {
+        if(err){
+            console.log(err);
+            res.send('Error al insertar categoria');
+        }else {
+            console.log(result);
+            res.send('categoria insertada con exito!');
+        }    
+    });
+});
+
+// Ruta de productos
+app.get('/productos', isAthenticated, (req, res) => {
+    const query = 'SELECT * FROM categorias';
+    db.query(query, (err, result) => {
+        if(err){
+           console.err('Error al obtener las categorias', err);
+           return res.status(500).send('Error al obtener las categorias'); 
+        }
+        res.render('productos', { categorias: result });
+    });
+});
+
+// Ruta para cargar las categorias
 
 module.exports = app;

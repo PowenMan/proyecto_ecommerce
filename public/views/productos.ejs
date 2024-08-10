@@ -1,0 +1,72 @@
+<%- include('includes/adminlte') %>
+<!-- Content Wrapper. Contains page content -->
+<section class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h1>Inserta un nuevo producto</h1>
+        </div>
+        <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Formulario de productos</li>
+        </ol>
+        </div>
+    </div>
+    </div><!-- /.container-fluid -->
+</section>
+<!-- Main content -->
+<section class="content">
+<div class="container-fluid">
+<div class="row">
+<!-- left column -->
+<div class="col-md-12">
+<!-- general form elements -->
+<div class="card card-primary">
+    <div class="card-header">
+      <h3 class="card-title">Crear producto</h3>
+    </div>
+    <!-- /.card-header -->
+    <!-- form start -->
+    <form role="form" action="/productos" method="post">
+      <div class="card-body">
+        <div class="form-group">
+          <label for="nombre">Nombre:</label>
+          <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese nombre categoria...">
+        </div>
+        <div class="form-group">
+          <label for="descripcion">Descripcion:</label>
+          <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="Ingrese descripcion del producto...">
+        </div>
+        <div class="form-group">
+          <label for="precio">Precio:</label>
+          <input type="number" class="form-control" id="precio" name="precio" placeholder="Ingrese precio del producto...">
+        </div>
+        <div class="form-group">
+          <label for="stock">Cantidad:</label>
+          <input type="number" class="form-control" id="stock" name="stock" placeholder="Ingrese cantidad del producto...">
+        </div>
+        <div class="form-group">
+          <label for="stock">Categoria:</label>
+          <select class="form-control" name="categoria" id="categoria">
+            <option value="">Seleccione una categoria</option>
+            <% categorias.forEach(function(categoria) { %>
+                <option value="<%= categoria.id %>"><%= categoria.nombre %></option>
+            <% }) %>
+          </select>
+        </div>
+
+      </div>
+      <!-- /.card-body -->
+
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Enviar</button>
+      </div>
+    </form>
+  </div>
+  <!-- /.card -->
+</div>
+</div>
+</div>
+</section>
+<%- include('includes/adminfoot') %>
