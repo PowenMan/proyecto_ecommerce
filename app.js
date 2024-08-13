@@ -1,8 +1,9 @@
-const { app } = require('./config');
+const { app, upload } = require('./config');
 const db = require('./db');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 
+// Me permite recibir peticiones externas.
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -119,6 +120,36 @@ app.get('/productos', isAthenticated, (req, res) => {
     });
 });
 
-// Ruta para cargar las categorias
+// Ruta para cargar los productos
+app.post('/productos', isAthenticated, upload.single('imagen'), (req, res) => {
+    const { nombre, descripcion, precio, stock, categoria } = req.body;
+    const imagenNombre = req.file.filename;
+    const imagenURL = `${req.protocol}://${req.get('host')}/uploads/${imagenNombre}`;
+
+
+    const query = 'INSERT INTO productos (nombre, descripcion, precio, stock, categoria_id, imagen_url) VALUES (?, ?, ?, ?, ?, ?)';
+    const values = [nombre, descripcion, precio, stock, categoria, imagenURL];
+
+    db.query(query, values, (err, result) => {
+        if(err){
+            console.log('Error al guardar el producto:', err);
+            return res.status(500).send('Error al guardar el producto');
+        }
+        res.redirect('/listar-productos');
+        // res.send('Prodcuto guardado exitosamente');
+    });
+});
+
+// Ruta listar productos
+app.get('/listar-productos', isAthenticated, (req, res) => {
+    const query = 'SELECT * FROM productos JOIN categorias ON productos.categoria_id = categorias.id';
+    db.query(query, (err, result) => {
+        if(err){
+           console.err('Error al obtener las productos', err);
+           return res.status(500).send('Error al obtener los productos'); 
+        }
+        res.render('listar-productos', { productos: result });
+    });
+});
 
 module.exports = app;
