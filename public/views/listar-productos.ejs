@@ -42,11 +42,11 @@
                 <% productos.forEach(producto => {  %>
               <tr>
                 <td><%= producto.id %></td>
-                <td><%= producto.nombre %></td>
+                <td><%= producto.nom_producto %></td>
                 <td><%= producto.descripcion %></td>
-                <td><%= producto.precio %></td>
+                <td><%= producto.precio.toLocaleString('es-CO') %></td>
                 <td><%= producto.stock %></td>
-                <td><%= producto.nombre %></td>
+                <td><%= producto.nom_categoria %></td>
                 <td>
                     <img style="width: 70px;"; class="product__img" src="<%= producto.imagen_url %>" alt="<%= producto.nombre %>">
                 </td>

@@ -29,7 +29,14 @@ app.get('/logout', (req, res) => {
 
 // Rutas de las url
 app.get('/', (req, res) =>{
-    res.render('index');
+    const query = 'SELECT * FROM productos';
+    db.query(query, (err, result) => {
+        if(err){
+           console.err('Error al obtener las productos', err);
+           return res.status(500).send('Error al obtener los productos'); 
+        }
+        res.render('index', { productos: result });
+    });
 });
 
 // Ruta de logueo
@@ -142,7 +149,7 @@ app.post('/productos', isAthenticated, upload.single('imagen'), (req, res) => {
 
 // Ruta listar productos
 app.get('/listar-productos', isAthenticated, (req, res) => {
-    const query = 'SELECT * FROM productos JOIN categorias ON productos.categoria_id = categorias.id';
+    const query = 'SELECT productos.nombre AS nom_producto, categorias.nombre AS nom_categoria, productos.descripcion, productos.precio, productos.stock, productos.imagen_url  FROM productos JOIN categorias ON productos.categoria_id = categorias.id';
     db.query(query, (err, result) => {
         if(err){
            console.err('Error al obtener las productos', err);
