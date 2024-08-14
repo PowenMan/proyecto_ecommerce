@@ -164,32 +164,32 @@ app.get('/listar-productos', isAthenticated, (req, res) => {
 app.post('/add-to-cart', (req, res) => {
     const { productoId } = req.body;
 
-    if(!req.session.cart){
+    if (!req.session.cart) {
         req.session.cart = [];
     }
-
-    const existingProductIndex = req.session.cart.findIndex(item => item.id === productoId);
+    
+    const existingProductIndex = req.session.cart.findIndex(item => item.id == productoId);
 
     if (existingProductIndex > -1) {
         req.session.cart[existingProductIndex].cantidad += 1;
-        const cartCount = req.session.cart.reduce((sum, item) => sum * item.cantidad, 0);
+        const cartCount = req.session.cart.reduce((sum, item) => sum + item.cantidad, 0);
         res.json({ message: 'Cantidad actualizada en el carrito', cartCount: cartCount });
-    }else {
+    } else {
         db.query('SELECT * FROM productos WHERE id = ?', [productoId], (err, result) => {
-            if(err){
+            if (err) {
                 console.log('Error al obtener el producto:', err);
-                return res.status(500).send('Error al agregar al carrito');
+                return res.status(500).json({error: 'Error al agregar al carrito'});
             }
 
             if (result.length > 0) {
                 const producto = result[0];
-                producto.cantidad = 1;
+                producto.cantidad = 1; 
                 req.session.cart.push(producto);
                 const cartCount = req.session.cart.reduce((sum, item) => sum + item.cantidad, 0);
                 res.json({ message: 'Producto agregado al carrito', cartCount: cartCount });
             } else {
-                res.status(404).json({error: 'Producto no encontado'});
-            }  
+                res.status(404).json({error: 'Producto no encontrado'});
+            }
         });
     }
 });
