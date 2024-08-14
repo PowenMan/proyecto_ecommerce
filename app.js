@@ -29,13 +29,14 @@ app.get('/logout', (req, res) => {
 
 // Rutas de las url
 app.get('/', (req, res) =>{
+    const cartCount = req.session.cart ? req.session.cart.length : 0;
     const query = 'SELECT * FROM productos';
     db.query(query, (err, result) => {
         if(err){
            console.err('Error al obtener las productos', err);
            return res.status(500).send('Error al obtener los productos'); 
         }
-        res.render('index', { productos: result });
+        res.render('index', { productos: result, cartCount });
     });
 });
 
@@ -157,6 +158,48 @@ app.get('/listar-productos', isAthenticated, (req, res) => {
         }
         res.render('listar-productos', { productos: result });
     });
+});
+
+// Ruta para agregar productos al carrito
+app.post('/add-to-cart', (req, res) => {
+    const { productoId } = req.body;
+
+    if(!req.session.cart){
+        req.session.cart = [];
+    }
+
+    const existingProductIndex = req.session.cart.findIndex(item => item.id === productoId);
+
+    if (existingProductIndex > -1) {
+        req.session.cart[existingProductIndex].cantidad += 1;
+        const cartCount = req.session.cart.reduce((sum, item) => sum * item.cantidad, 0);
+        res.json({ message: 'Cantidad actualizada en el carrito', cartCount: cartCount });
+    }else {
+        db.query('SELECT * FROM productos WHERE id = ?', [productoId], (err, result) => {
+            if(err){
+                console.log('Error al obtener el producto:', err);
+                return res.status(500).send('Error al agregar al carrito');
+            }
+
+            if (result.length > 0) {
+                const producto = result[0];
+                producto.cantidad = 1;
+                req.session.cart.push(producto);
+                const cartCount = req.session.cart.reduce((sum, item) => sum + item.cantidad, 0);
+                res.json({ message: 'Producto agregado al carrito', cartCount: cartCount });
+            } else {
+                res.status(404).json({error: 'Producto no encontado'});
+            }  
+        });
+    }
+});
+
+// Ruta checkout de productos
+app.get('/checkout', (req, res) => {
+    const cart = req.session.cart || [];
+    const total = cart.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
+
+    res.render('checkout', { cart, total });
 });
 
 module.exports = app;

@@ -1,0 +1,17 @@
+<%- include('includes/header-checkout') %>
+<section>
+<div class="pedido">
+<h2 class="pedido__title">Revisa tu pedido</h2>
+<p class="pedido__total"><a href="/" class="pedido__atr">Seguir comprando</a></p>
+<ul class="pedido__list">
+    <% cart.forEach(item => { %>
+        <li>
+            <img src="<%= item.imagen_url %>" alt="<%= item.nombre %>" width="50">
+            <%= item.nombre %> - <p class="pedido__text">Cantidad:</p> <%= item.cantidad %> - <p class="pedido__text">Precio:</p> <%= (item.precio * item.cantidad).toLocaleString('es-CO') %>
+        </li>
+    <% }) %>
+</ul>
+<p class="pedido__total"><a href="#" class="pedido__cta">ir a pagar/Total: $<%= total.toLocaleString('es-CO') %></a></p>
+</div>
+</section>
+<%- include('includes/foot-checkout') %>

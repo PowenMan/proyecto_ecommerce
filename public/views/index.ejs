@@ -18,36 +18,9 @@
                 </figure>
                 <h3 class="offers__subtitle"><%= producto.nombre %></h3>
                 <p class="offers__price">$<%= producto.precio.toLocaleString('es-CO') %></p>
-                <a href="#" class="offers__cta">Añadir al carrito</a>
+                <a href="#" class="offers__cta" data-producto-id="<%= producto.id %>" >Añadir al carrito</a>
             </div>
             <% }); %>
-
-            <div class="offers__items">
-                <figure class="offers__images">
-                    <img class="offers__img" src="images/peripherals-1.png" alt="">
-                </figure>
-                <h3 class="offers__subtitle">Periféricos</h3>
-                <p class="offers__price">$5.999.000</p>
-                <a href="#" class="offers__cta">Añadir al carrito</a>
-            </div>
-
-            <div class="offers__items">
-                <figure class="offers__images">
-                    <img class="offers__img" src="images/Refrigeration-1.png" alt="">
-                </figure>
-                <h3 class="offers__subtitle">Chasis</h3>
-                <p class="offers__price">$5.999.000</p>
-                <a href="#" class="offers__cta">Añadir al carrito</a>
-            </div>
-
-            <div class="offers__items">
-                <figure class="offers__images">
-                    <img class="offers__img" src="images/Power-Sources-1.png" alt="">
-                </figure>
-                <h3 class="offers__subtitle">PC Gamer Ultra</h3>
-                <p class="offers__price">$5.999.000</p>
-                <a href="#" class="offers__cta">Añadir al carrito</a>
-            </div>
 
         </div>
       </section>

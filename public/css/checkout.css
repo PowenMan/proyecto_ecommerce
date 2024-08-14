@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+
+body {
+    font-family: "Quicksand", sans-serif;
+}
+.contenedor {
+    background: #1a5276;
+    padding: 0 1em;
+}
+.barra__text {
+    font-size: 20px;
+    color: #fff;
+    font-weight: bold;
+}
+.barra {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header__img {
+    display: block;
+    width: 120px;
+}
+.header__cand {
+    display: block;
+    width: 64px;
+}
+.pedido {
+    width: 80%;
+    max-width: 1200px;
+    margin: 1em auto;
+    background: #e5e7e9;
+    padding: 1em 2em;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, .5);
+}
+.pedido__title {
+    font-size: 30px;
+    text-align: center;
+}
+.pedido__list {
+    list-style: none;
+    padding: 0;
+}
+.pedido__list li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    background: #f2f3f4;
+    margin-bottom: 1em;
+    border-radius: 15px;
+    padding: 1em;
+}
+.pedido__text {
+    font-weight: bold;
+}
+a.pedido__cta {
+    display: block;
+    width: max-content;
+    background: #1a5276;
+    color: #fff;
+    font-weight: bold;
+    font-size: 20px;
+    text-decoration: none;
+    padding: 0.5em 1em;
+    border-radius: 10px;
+    transition: all .3s;
+}
+a.pedido__cta:hover {
+    background: #273746;
+}
+p.barra__copy {
+    font-size: 16px;
+    color: #fff;
+}
+a.barra__cta {
+    color: #fff;
+    font-size: 16px;
+    text-decoration: none;
+    transition: all .3s;
+}
+a.barra__cta:hover {
+    text-decoration: underline;
+}
+a.pedido__atr {
+    display: block;
+    background: #abb2b9;
+    width: max-content;
+    color: #1b4f72;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 0.5em 1em;
+    border-radius: 10px;
+    transition: all .3s;
+}
+a.pedido__atr:hover {
+    background: #566573;
+    color: #e5e7e9;
+}
