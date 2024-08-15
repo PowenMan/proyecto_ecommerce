@@ -92,7 +92,15 @@ app.post('/login', (req, res) => {
 
 // Ruta de logueo
 app.get('/admin', isAthenticated, (req, res) => {
-    res.render('admin');
+    const cartCount = req.session.cart ? req.session.cart.length : 0;
+    const query = 'SELECT * FROM productos';
+    db.query(query, (err, result) => {
+        if(err){
+           console.err('Error al obtener las productos', err);
+           return res.status(500).send('Error al obtener los productos'); 
+        }
+        res.render('admin', { productos: result, cartCount });
+    });
 });
 
 // Ruta de categorias
