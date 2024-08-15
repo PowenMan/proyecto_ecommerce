@@ -195,11 +195,52 @@ app.post('/add-to-cart', (req, res) => {
 });
 
 // Ruta checkout de productos
-app.get('/checkout', (req, res) => {
+app.get('/checkout', isAthenticated, (req, res) => {
     const cart = req.session.cart || [];
+    console.log('Carrito:', cart);
     const total = cart.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
 
     res.render('checkout', { cart, total });
+});
+
+// Ruta para procesar el pago
+app.post('/procesar-compra', isAthenticated, (req, res) => {
+    const cart = req.session.cart; //Esta es una propiedad que se utiliza para almacenar datos.
+    const userId = req.session.usuario.id;
+
+    if(!cart || cart.length === 0){
+        return res.status(400).send('El carrito esta vacio.');
+    }
+
+    const total = cart.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
+
+    const orderQuery = 'INSERT INTO ordenes (usuario_id, total) VALUES (?, ?)';
+    db.query(orderQuery, [userId, total], (err, result) => {
+        if(err){
+            console.log('Error al crear la orden:', err);
+            return res.status(500).send('Error al procesar la compra.');
+        }
+
+        const orderId = result.insertId;
+
+        const orderItemsQuery = 'INSERT INTO orden_items (orden_id, producto_id, cantidad, precio) VALUES ?';
+        const orderItems = cart.map(item => [orderId, item.id, item.cantidad, item.precio]);
+
+        db.query(orderItemsQuery, [orderItems], (err, result) => {
+            if(err){
+                console.log('Error al guardar los productos de la orden:', err);
+                return res.status(500).send('Error al procesar la compra');
+            }
+            req.session.cart = [];
+            res.redirect(`/confirmacion-compra?ordenId=${orderId}`);
+        });
+    });
+});
+
+// Ruta para confirmar compra
+app.get('/confirmacion-compra', (req, res) => {
+    const { ordenId } = req.query;
+    res.render('confirmacion-compra', { ordenId });
 });
 
 module.exports = app;

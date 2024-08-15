@@ -11,7 +11,9 @@
         </li>
     <% }) %>
 </ul>
-<p class="pedido__total"><a href="#" class="pedido__cta">ir a pagar/Total: $<%= total.toLocaleString('es-CO') %></a></p>
+<form action="/procesar-compra" method="POST">
+<button type="submit" class="pedido__cta">ir a pagar/Total: $<%= total.toLocaleString('es-CO') %></button>
+</form>
 </div>
 </section>
 <%- include('includes/foot-checkout') %>

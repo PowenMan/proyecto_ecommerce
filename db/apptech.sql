@@ -164,7 +164,7 @@ CREATE TABLE `pedidos` (
 CREATE TABLE `productos` (
   `id` int NOT NULL,
   `nombre` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `decripcion` text COLLATE utf8mb4_general_ci NOT NULL,
+  `descripcion` text COLLATE utf8mb4_general_ci NOT NULL,
   `precio` decimal(10,2) NOT NULL,
   `stock` int NOT NULL,
   `categoria_id` int NOT NULL,
