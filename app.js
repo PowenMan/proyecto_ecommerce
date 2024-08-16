@@ -30,13 +30,21 @@ app.get('/logout', (req, res) => {
 // Rutas de las url
 app.get('/', (req, res) =>{
     const cartCount = req.session.cart ? req.session.cart.length : 0;
-    const query = 'SELECT * FROM productos';
-    db.query(query, (err, result) => {
+    const productoQuery = 'SELECT * FROM productos';
+    const juegosQuery = 'SELECT * FROM productos WHERE categoria_id = 1';
+    db.query(productoQuery, (err, productos) => {
         if(err){
            console.err('Error al obtener las productos', err);
            return res.status(500).send('Error al obtener los productos'); 
         }
-        res.render('index', { productos: result, cartCount });
+
+        db.query(juegosQuery, (err, juegos) => {
+            if(err){
+                console.err('Error al obtener los productos de la categoria juegos', err);
+                return res.status(500).send('Error al obtener los productos de la categoria juegos'); 
+             }
+            res.render('index', { productos, cartCount, juegos });
+        });
     });
 });
 
